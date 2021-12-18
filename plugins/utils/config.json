@@ -1,0 +1,8 @@
+{
+    "name": "utils",
+    "description": "Utils Plugin",
+    "commands": [
+        "hello.php"
+    ],
+    "events": []
+}
