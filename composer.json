@@ -7,6 +7,6 @@
     "require": {
         "team-reflex/discord-php": "^6.0",
         "vlucas/phpdotenv": "^5.4",
-        "discord-php/slash": "^1.0"
+        "nirbose/collection.php": "^0.5.0"
     }
 }

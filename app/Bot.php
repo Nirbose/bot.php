@@ -3,66 +3,55 @@
 namespace App;
 
 use Discord\Discord;
-use Discord\Parts\Channel\Message;
-use Discord\Parts\User\Activity;
 
-class Bot {
+class Bot extends BotOptions {
 
     protected $discord;
-    protected string $token;
-
-    public bool $help = true;
+    private array $options = [
+        'token',
+        'intents',
+        'logger',
+        'loadAllMembers',
+        'storeMessages',
+        'retrieveBans',
+        'pmChannels',
+        'disabledEvents',
+        'loop',
+        'logger',
+        'dnsConfig',
+        'shardId',
+        'shardCount',
+    ];
 
     /**
-     * presence of the bot
+     * Create a new Bot instance. 
      *
-     * @var array|null
+     * @param string $token
+     * @return self
      */
-    public $presence;
-
-    public function __construct(array $options = [])
+    public static function new(string $token): self
     {
-        $this->discord = new Discord($options);
-        $this->token = $options['token'];
+        self::$config['token'] = $token;
+        return new static();
     }
 
-    public function config(array $options = []) 
-    {
-        if (isset($options['help']) && is_bool($options['help'])) {
-            $this->help = $options['help'];
-        }
-
-        if (isset($options['presence'])) {
-            $this->presence = $options['presence'];
-        }
-    }
-
+    /**
+     * Run the bot.
+     * 
+     * @return void
+     */
     public function run()
     {
-        $h = new Handler();
-        $h->plugin();
-        try {
+        $options = [];
 
-            $this->discord->once('ready', function (Discord $client) {
-                echo "Bot is ready!", PHP_EOL;
-
-                if ($this->presence) {
-                    $client->updatePresence(new Activity($client, $this->presence, true), false, $this->presence['status']);
-                }
-
-                $client->on('message', function (Message $message) {
-                    var_dump($message);
-                    if ($message->content == PREFIX.'ping') {
-                        $message->reply('pong!');
-                    }
-                });
-            });
-
-            $this->discord->run();
-    
-        } catch (\Discord\Exceptions\IntentException $e) {
-            echo $e->getMessage(), PHP_EOL;
+        foreach ($this::$config as $key => $value) {
+            if (in_array($key, $this->options)) {
+                $options[$key] = $value;
+            }
         }
+
+        $this->discord = new Discord($options);
     }
+
 
 }
