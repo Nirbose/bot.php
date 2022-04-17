@@ -9,12 +9,12 @@ class Create {
     /**
      * @var string $name
      */
-    private static $name;
+    protected static $name;
 
     /**
      * @var bool $isSlash
      */
-    private static $isSlash;
+    protected static $isSlash;
     
     /**
      * Create a new command instance.
@@ -84,8 +84,20 @@ class Create {
     /**
      * set options for command
      * 
-     * @param array $options
+     * @param Option[] $options
      * @return self
      */
+    public function setOptions(Option ...$options): self
+    {
+        if (is_array($options)) {
+            Collection::add(self::$name, ['options' => $options]);
+        } else {
+            foreach ($options as $option) {
+                Collection::add(self::$name, ['options' => $option->toArray()]);
+            }
+        }
+        
+        return new static();
+    }
 
 }
