@@ -2,21 +2,38 @@
 
 namespace App;
 
+use Nirbose\Collection\Collection;
+
 class Handler {
 
-    public bool $help;
-
-    public function __construct(bool $help = true)
+    public static function load()
     {
-        $this->help = $help;
-    }
+        return new class() {
 
-    public function plugin()
-    {
-        echo "ok ?\n";
-        foreach (glob(dirname(__DIR__) . '/plugins/*/config.json') as $plugin) {
-            var_dump($plugin);
-        }
+            public function commands() {
+                $commands = Collection::get('commands');
+
+                foreach ($commands as $command) {
+                }
+            }
+
+            public function listeners() {
+
+            }
+
+            private function slashBuilder(array $command): array
+            {
+                $attributes = [
+                    'name' => $command['name'],
+                    'description' => $command['description'],
+                    'type' => $command['type'],
+                    'options' => $command['options'],
+                ];
+
+                return $attributes;
+            }
+
+        };
     }
 
 }

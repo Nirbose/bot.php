@@ -4,34 +4,22 @@ namespace App;
 
 use Discord\Discord;
 
-class Bot extends BotOptions {
+class Bot {
 
     protected $discord;
-    private array $options = [
-        'token',
-        'intents',
-        'logger',
-        'loadAllMembers',
-        'storeMessages',
-        'retrieveBans',
-        'pmChannels',
-        'disabledEvents',
-        'loop',
-        'logger',
-        'dnsConfig',
-        'shardId',
-        'shardCount',
-    ];
+
+    private static array $options = [];
 
     /**
      * Create a new Bot instance. 
      *
-     * @param string $token
+     * @param array $options
      * @return self
      */
-    public static function new(string $token): self
+    public static function new(array $options): self
     {
-        self::$config['token'] = $token;
+        self::$options = $options;
+
         return new static();
     }
 
@@ -42,16 +30,8 @@ class Bot extends BotOptions {
      */
     public function run()
     {
-        $options = [];
-
-        foreach ($this::$config as $key => $value) {
-            if (in_array($key, $this->options)) {
-                $options[$key] = $value;
-            }
-        }
-
-        $this->discord = new Discord($options);
+        $this->discord = new Discord($this::$options);
+        $this->discord->run();
     }
-
 
 }
