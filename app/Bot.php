@@ -31,6 +31,11 @@ class Bot {
     public function run()
     {
         $this->discord = new Discord($this::$options);
+
+        $this->discord->on('ready', function ($discord) {
+            Handler::load()->commands();
+        });
+
         $this->discord->run();
     }
 

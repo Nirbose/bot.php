@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Command\Slash;
 use Nirbose\Collection\Collection;
 
 class Handler {
@@ -11,14 +12,25 @@ class Handler {
         return new class() {
 
             public function commands() {
+                $this->each(__DIR__ . '/../commands/*/*.php');
+
                 $commands = Collection::get('commands');
 
                 foreach ($commands as $command) {
+                    if (isset($command['slash']) && $command['slash']) {
+                        Slash::make($command);
+                    }
                 }
             }
 
             public function listeners() {
 
+            }
+
+            private function each(string $path) {
+                foreach (glob($path) as $file) {
+                    require_once $file;
+                }
             }
 
             private function slashBuilder(array $command): array
