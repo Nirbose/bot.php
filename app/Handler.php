@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Command\Slash;
+use App\Slash;
 use Nirbose\Collection\Collection;
 
 class Handler {
