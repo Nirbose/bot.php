@@ -14,7 +14,7 @@ class Slash {
      *
      * @var Discord|null
      */
-    private $discord = null;
+    private static $discord = null;
 
     private static array $fields = ['name', 'description', 'type', 'options'];
 

@@ -4,15 +4,15 @@ use App\Bot;
 use Discord\WebSockets\Intents;
 use Dotenv\Dotenv;
 
-include "./vendor/autoload.php";
+define('BASE_PATH', __DIR__ . '/..');
 
-Dotenv::createImmutable(__DIR__)->load();
+include BASE_PATH . "/vendor/autoload.php";
+
+Dotenv::createImmutable(BASE_PATH)->load();
 
 define("PREFIX", $_ENV["BOT_PREFIX"]);
 
-$bot = new Bot([
+Bot::new([
     'token' => $_ENV['BOT_TOKEN'],
     'intents' => Intents::getAllIntents()
-]);
-
-$bot->run();
+])->run();
