@@ -3,7 +3,6 @@
 namespace App;
 
 use Discord\Discord;
-use Discord\DiscordCommandClient as Cmd;
 use Discord\Parts\Interactions\Command\Command;
 use Error;
 
@@ -18,10 +17,22 @@ class Slash {
 
     private static array $fields = ['name', 'description', 'type', 'options'];
 
+    /**
+     * Init Discord instance
+     *
+     * @param Discord $discord
+     * @return void
+     */
     public static function init(Discord $discord) {
         self::$discord = $discord;
     }
 
+    /**
+     * Make slash command
+     *
+     * @param array $command
+     * @return void
+     */
     public static function make(array $command) {
         self::checker();
 
@@ -63,6 +74,11 @@ class Slash {
         }
     }
 
+    /**
+     * Check if Discord instance is set.
+     *
+     * @return void
+     */
     private static function checker()
     {
         if (self::$discord instanceof Discord) {

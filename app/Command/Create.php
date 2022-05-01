@@ -100,4 +100,28 @@ class Create {
         return new static();
     }
 
+    /**
+     * set guilds for command
+     * 
+     * @param string[] $guilds
+     * @return self
+     */
+    public function setGuilds(array $guilds): self
+    {
+        Collection::add(self::$name, ['guilds' => $guilds]);
+        return new static();
+    }
+
+    /**
+     * link linstener for command
+     * 
+     * @param string $listener
+     * @return self
+     */
+    public function linkListener(string $listener): self
+    {
+        Collection::add(self::$name, ['listener' => $listener]);
+        return new static();
+    }
+
 }

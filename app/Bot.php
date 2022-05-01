@@ -34,7 +34,10 @@ class Bot {
 
         $this->discord->on('ready', function (Discord $discord) {
             Slash::init($discord);
-            Handler::load()->commands();
+            $handler = Handler::load($this->discord);
+
+            $handler->listeners();
+            $handler->commands();
         });
 
         $this->discord->run();

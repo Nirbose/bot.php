@@ -3,49 +3,47 @@
 namespace App;
 
 use App\Slash;
+use Discord\Discord;
 use Nirbose\Collection\Collection;
 
 class Handler {
 
-    public static function load()
+    private static Discord $discord;
+
+    public static function load(Discord $discord)
     {
-        return new class() {
+        self::$discord = $discord;
+        return new static();
+    }
 
-            public function commands() {
-                $this->each(__DIR__ . '/../commands/*/*.php');
+    public function commands() {
+        foreach (glob(__DIR__ . '/../commands/*/*.php') as $file) {
+            require_once $file;
+        }
 
-                $commands = Collection::get('commands');
+        $commands = Collection::get('commands');
 
-                foreach ($commands as $command) {
-                    if (isset($command['slash']) && $command['slash']) {
-                        Slash::make($command);
-                    }
-                }
+        if (is_null($commands)) {
+            return;
+        }
+
+        foreach ($commands as $command) {
+            if (isset($command['slash']) && $command['slash']) {
+                Slash::make($command);
             }
+        }
+    }
 
-            public function listeners() {
+    public function listeners() {
+        foreach (glob(__DIR__ . '/../listeners/*.php') as $file) {
+            require_once $file;
+        }
 
-            }
+        $listeners = Collection::get('listeners');
 
-            private function each(string $path) {
-                foreach (glob($path) as $file) {
-                    require_once $file;
-                }
-            }
-
-            private function slashBuilder(array $command): array
-            {
-                $attributes = [
-                    'name' => $command['name'],
-                    'description' => $command['description'],
-                    'type' => $command['type'],
-                    'options' => $command['options'],
-                ];
-
-                return $attributes;
-            }
-
-        };
+        foreach ($listeners as $name => $listener) {
+            $this::$discord->on($name, $listener['run']);
+        }
     }
 
 }
